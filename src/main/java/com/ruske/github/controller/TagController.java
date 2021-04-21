@@ -1,7 +1,7 @@
 package com.ruske.github.controller;
 
 import com.ruske.github.model.Tag;
-import com.ruske.github.repository.TagRepository;
+import com.ruske.github.service.ITagService;
 import com.sun.istack.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +20,20 @@ import java.util.List;
 @RequestMapping("/tags")
 public class TagController {
     @Autowired
-    TagRepository tagRepository;
+    ITagService ITagService;
 
     @GetMapping()
     public ResponseEntity<List<Tag>> getTags(){
-        return ResponseEntity.ok().body(tagRepository.findAll());
+        return ResponseEntity.ok().body(ITagService.findAll());
     }
 
     @PostMapping()
     public ResponseEntity<Tag> createTag(@RequestBody Tag tag) {
-        return ResponseEntity.ok().body(tagRepository.save(tag));
+        return ResponseEntity.ok().body(ITagService.store(tag));
     }
 
     @GetMapping("/{idGithub}")
     public ResponseEntity<List<Tag>> getTagsBIdGithub(@PathVariable @NotNull Integer idGithub){
-        return ResponseEntity.ok().body(tagRepository.findByIdGithub(idGithub));
+        return ResponseEntity.ok().body(ITagService.findByIdGithub(idGithub));
     }
 }

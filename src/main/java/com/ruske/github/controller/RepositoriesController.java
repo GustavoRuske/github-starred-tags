@@ -1,8 +1,9 @@
 package com.ruske.github.controller;
 
 import com.ruske.github.dto.RepositoryDTO;
-import com.ruske.github.repository.TagRepository;
-import com.ruske.github.service.RepositoriesService;
+import com.ruske.github.repository.ITagRepository;
+import com.ruske.github.service.IRepositoriesService;
+import com.ruske.github.service.ITagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @RestController()
@@ -19,21 +22,31 @@ import java.util.List;
 public class RepositoriesController {
 
     @Autowired
-    private RepositoriesService repositoriesService;
+    private IRepositoriesService repositoriesService;
 
     @Autowired
-    private TagRepository tagRepository;
+    private ITagService tagService;
 
     @RequestMapping(path = "/starred/{name}", method = RequestMethod.GET)
     public List<RepositoryDTO> getStarredRepository(@PathVariable String name) {
-        log.info("Repository " + name + " has called!");
+        log.info("Repository by name {" + name + "} has called!");
         List<RepositoryDTO> repos = repositoriesService.findStarredByUserName(name);
+        return repos;
+    }
 
-        if (!CollectionUtils.isEmpty(repos)) {
-            repos.stream().forEach(repo -> {
-                repo.setGithubTags(tagRepository.findByIdGithub(repo.getId()));
-            });
-        }
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    public RepositoryDTO getRepositoryById(@PathVariable Integer id) {
+        log.info("Repository by id {" + id + "} has called!");
+        RepositoryDTO repo = repositoriesService.findById(id);
+
+        return repo;
+    }
+
+    @RequestMapping(path = "/tag/{tagId}", method = RequestMethod.GET)
+    public List<RepositoryDTO> getRepositoryByTag(@PathVariable UUID tagId) {
+        log.info("Repository by tag {" + tagId + "} has called!");
+        List<RepositoryDTO> repos = repositoriesService.findByTag(tagId);
+
         return repos;
     }
 }

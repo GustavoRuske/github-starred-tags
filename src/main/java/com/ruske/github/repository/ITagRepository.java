@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface TagRepository extends JpaRepository<Tag, UUID> {
+public interface ITagRepository extends JpaRepository<Tag, UUID> {
     List<Tag> findByIdGithub(final Integer idGithub);
 }

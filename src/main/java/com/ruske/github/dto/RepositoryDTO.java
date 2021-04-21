@@ -11,11 +11,18 @@ import java.util.List;
 @Setter
 public class RepositoryDTO {
     Integer id;
+
     String name;
+
     String description;
+
     List<Tag> githubTags;
 
     @JsonProperty("stargazers_count")
     Integer starCount;
+
     String language;
+
+    @JsonProperty("html_url")
+    String url;
 }
